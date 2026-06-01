@@ -20,9 +20,9 @@
 - [x] 确认 `.claude-plugin/plugin.json` 仍能被 Claude Code 识别（通过 `.claude-plugin` 符号链接）
 
 ### 4. 完善文档
-- [ ] README.md 中的平台安装说明是否足够清晰？
-- [ ] 是否需要为 `adapters/codex/` 和 `adapters/opencode/` 添加内嵌的格式说明注释？
-- [ ] 考虑为适配器目录添加 `README.md` 说明文件
+- [x] README.md 中的平台安装说明是否足够清晰？
+- [x] 是否需要为 `adapters/codex/` 和 `adapters/opencode/` 添加内嵌的格式说明注释？
+- [x] 考虑为适配器目录添加 `README.md` 说明文件
 
 ### 5. 功能性检查
 - [x] 运行 `bash install.sh --all`，测试安装完整流程

@@ -93,7 +93,7 @@ The skill produces:
 │   ├── codex/                               # Codex CLI agent definition
 │   │   └── fpp.agent.md
 │   └── opencode/                            # OpenCode rules
-│       └── fpp.opencode.md
+│       └── fpp.rule.md
 ├── commands -> adapters/claude/commands     # Backward-compat symlink
 ├── .claude-plugin -> adapters/claude/.claude-plugin
 ├── README.md                                # This file

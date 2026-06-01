@@ -1,11 +1,19 @@
 ---
+# OpenCode rules format
+# Fields: name (required), description (required)
 name: first-principles-plan
 description: "Forces first-principles thinking for code changes — critically evaluate existing design, design the ideal solution, then reconcile."
 ---
 
 # First Principles Plan
 
+> **OpenCode adapter** — This file provides the entry point for OpenCode (`~/.opencode/skills/first-principles-plan/`).
+> It delegates to the canonical methodology at `~/.agents/skills/first-principles-plan/SKILL.md`.
+> Format: `.rule.md` with YAML frontmatter (name, description).
+
 Load and follow the full instructions from `~/.agents/skills/first-principles-plan/SKILL.md`.
+
+This adapter is installed via: `bash install.sh --opencode`
 
 This rule implements a structured three-phase process for code modification planning:
 
