@@ -57,7 +57,11 @@ echo ""
 echo "✅ Core skill installed at ${INSTALL_DIR}"
 
 # ── Platform: Claude Code ────────────────────────────────────
-# Auto-discovered via ~/.agents/skills/ scanning. No extra setup needed.
+# Create symlinks so Claude Code finds commands/ and .claude-plugin/
+# at the standard paths within the skill directory.
+echo "  → Setting up Claude Code discovery paths..."
+ln -sfn adapters/claude/commands "${INSTALL_DIR}/commands"
+ln -sfn adapters/claude/.claude-plugin "${INSTALL_DIR}/.claude-plugin"
 echo "   • Claude Code: auto-discovered (via ~/.agents/skills/)"
 
 # ── Platform: Codex CLI ──────────────────────────────────────
