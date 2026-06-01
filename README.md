@@ -23,20 +23,29 @@ The skill does **not** always recommend refactoring. It makes the tradeoff **exp
 curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-plan/main/install.sh | bash
 ```
 
-### Manual Install
+### Manual Install (Claude Code)
 
 ```bash
-# Clone the repo
 git clone https://github.com/reshiner/first-principles-plan.git ~/.agents/skills/first-principles-plan
-
-# Install the skill
-mkdir -p ~/.agents/skills/first-principles-plan
-cp ~/.agents/skills/first-principles-plan/SKILL.md ~/.agents/skills/first-principles-plan/SKILL.md
-
-# Install the slash command
-mkdir -p ~/.claude/commands
 ln -sf ~/.agents/skills/first-principles-plan/commands/fpp.md ~/.claude/commands/fpp.md
 ```
+
+### Manual Install (Codex CLI)
+
+```bash
+git clone https://github.com/reshiner/first-principles-plan.git ~/.agents/skills/first-principles-plan
+mkdir -p ~/.codex/skills/first-principles-plan
+cp ~/.agents/skills/first-principles-plan/SKILL.md ~/.codex/skills/first-principles-plan/SKILL.md
+```
+
+## How Skill Loading Works
+
+| Tool | Skill Path | Auto-Loaded? | Slash Command? |
+|------|-----------|--------------|----------------|
+| **Claude Code** | `~/.agents/skills/` | ✅ Yes, scanned at startup | ✅ `/fpp` |
+| **Codex CLI** | `~/.codex/skills/` | ✅ Yes, scanned at startup | ❌ Not supported (Codex uses a different command system) |
+
+The skill only needs to be placed in the correct directory — **no configuration files need to be edited**. The installer handles both tools automatically.
 
 ## Usage
 
