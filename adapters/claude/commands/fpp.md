@@ -1,6 +1,6 @@
 ---
-description: "First Principles Plan — critically evaluate existing code design, design the ideal solution, then reconcile. Use when you want design-quality-first analysis before code changes."
-argument-hint: "Describe the change or feature to analyze"
+description: "First Principles Plan — critically evaluate existing code design, design the ideal solution, then reconcile. / 第一性原理分析 — 批判性评估现有设计，设计理想方案，做出权衡推荐。Use when you want design-quality-first analysis before code changes."
+argument-hint: "Describe the change or feature to analyze / 描述你想要分析的需求或改动"
 allowed-tools: Read, Write, Edit, Bash, Glob
 ---
 

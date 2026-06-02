@@ -1,5 +1,7 @@
 # First Principles Plan
 
+**English** | [中文](README.zh-CN.md)
+
 A multi-platform AI coding skill that breaks the "minimal change" bias in LLM-assisted development.  
 **Works with:** Claude Code · Codex CLI · OpenCode
 
@@ -100,6 +102,17 @@ The skill produces:
 ├── LICENSE                                  # MIT License
 └── install.sh                               # Install script
 ```
+
+## Examples
+
+Real-world FPP analysis documents demonstrating the skill in action:
+
+| Example | Language | Scenario | Key Takeaway |
+|---------|----------|----------|--------------|
+| [Notification System — Webhook Support](examples/notification-system-fpp.md) | 中文 | Adding a new notification channel to an `if-elif` based sender | Shows how FPP catches design debt before adding the N+1th branch; recommends **Hybrid** (Strangler Fig for safe incremental refactor) |
+| [Payment Checkout — Buy Now](examples/payment-checkout-fpp.md) | English | Adding one-click purchase to a multi-step checkout flow | Shows when FPP **recommends the minimal patch** — because the debt hasn't compounded enough yet. Includes a documented refactoring trigger for when it should be revisited |
+
+Each example walks through all six sections of the FPP output format. They are self-contained demonstrations — the code snippets are illustrative, not from real repositories.
 
 ## Design Philosophy
 

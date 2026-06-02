@@ -2,7 +2,7 @@
 # Codex CLI .agent.md format
 # Fields: name (required), description (required)
 name: first-principles-plan
-description: "Forces first-principles thinking for code changes — critically evaluate existing design, design the ideal solution, then reconcile."
+description: "Forces first-principles thinking for code changes — critically evaluate existing design, design the ideal solution, then reconcile. / 第一性原理分析 — 批判性评估现有设计，设计理想方案，做出权衡推荐。"
 ---
 
 # First Principles Plan

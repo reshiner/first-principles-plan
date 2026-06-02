@@ -30,6 +30,12 @@ You are **not** required to always pick the refactor path. Sometimes the minimal
 
 **If unsure, use it.** The cost is one round of structured thinking; the cost of not using it is another layer of technical debt.
 
+## Language Matching
+
+**Output language MUST match the user's input language.** If the user asks in Chinese, output the entire analysis in Chinese — including section headers, table column names, and all narrative text. If the user asks in English, output in English. This applies to all three phases and the final structured document.
+
+(The template below is shown in English; localize its section headers and content when the user's language is not English.)
+
 ## The Three Phases
 
 You MUST follow these phases **in order**. Do not skip Phase 2 (Clean-Sheet Design) — that's where the value comes from.
