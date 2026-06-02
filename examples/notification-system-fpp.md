@@ -3,11 +3,11 @@
 > **场景还原：** 现有通知系统通过 `NotificationService` 发送邮件和短信，团队需新增 Webhook 投递渠道。
 > 这是一个典型的「if-else 膨胀」案例，FPP 分析揭示了从简单修补到结构性改进的完整决策过程。
 
-## 1. Intent
+## 1. 意图（Intent）
 
 **让系统能够通过 Webhook URL 发送通知给外部服务。** 核心能力是「发送通知」，渠道（邮件、短信、Webhook）是可变维度。用户想要的是新增一个渠道，而不是改变通知系统的本质。
 
-## 2. Current Design Critique
+## 2. 现有设计批判（Current Design Critique）
 
 现有代码的核心结构如下（示例代码，非真实项目）：
 
@@ -42,7 +42,7 @@ class NotificationService:
 - 所有渠道的语义相同（发送模式、重试行为、超时策略无差异）
 - 渠道增加不需要独立生命周期（部署、监控、配置管理）
 
-## 2b. Assumptions Challenged
+## 2b. 被挑战的假设（Assumptions Challenged）
 
 | 假设 | 类别 | 挑战 | 裁定 |
 |------|------|------|------|
@@ -51,7 +51,7 @@ class NotificationService:
 | "渠道配置可以放在同一个配置文件中" | 技术 | Webhook 需要 URL、密钥、签名算法等特有配置项，与邮件服务器配置无交集 | ❌ 推翻 |
 | "必须用同一个 send 接口" | 文化 | "一直这么做的"——但如果每个渠道有不同的参数需求（比如 Webhook 需要 headers），统一接口反而不自然 | ❌ 推翻 |
 
-## 3. Clean-Sheet Design
+## 3. 理想方案设计（Clean-Sheet Design）
 
 从第一性原理出发：通知系统的本质是「提交通知请求 → 路由到合适的渠道 → 渠道执行投递」。
 
@@ -93,9 +93,9 @@ class NotificationDispatcher:
 - **类型安全：** 渠道名称作为 key 注册，避免字符串魔法；`NotificationContext` 结构化参数
 - **生命周期分离：** 每个 `Notifier` 独立测试、独立部署、独立配置
 
-## 4. Gap Analysis
+## 4. 差距分析（Gap Analysis）
 
-| Aspect | Current | Ideal | Delta |
+| 维度 | 当前 | 理想 | 差距 |
 |--------|---------|-------|-------|
 | 渠道路由 | `if-elif` 链硬编码 | `Dispatcher.register()` 注册制 | 新增渠道不需要修改路由逻辑 |
 | 渠道实现 | 集中在 `send()` 方法中 | 每个渠道独立 `Notifier` 类 | 解耦为独立单元，可独立测试 |
@@ -103,7 +103,7 @@ class NotificationDispatcher:
 | 扩展方式 | 修改 `send()` + `elif` | 新建 `*Notifier` 类 + `register()` | 零修改现有代码 |
 | 错误处理 | 一个 `try/except` 包全部 | 每个渠道独立错误类型 | 细化错误语义 |
 
-## 5. Path Comparison
+## 5. 路径比较（Path Comparison）
 
 ### Path A：最小修改
 
@@ -147,7 +147,7 @@ elif type == "webhook":
 - 迁移风险：提取过程中可能遗漏边缘情况
 - 需要验证现有测试在新架构下仍通过
 
-## 6. Recommendation
+## 6. 推荐结论（Recommendation）
 
 **推荐：Hybrid — 采用 Strangler Fig 模式，分步安全推进**
 
