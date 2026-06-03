@@ -59,6 +59,8 @@ curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-plan/main
 
 ## Usage
 
+### Triggering an analysis
+
 ```
 # Manual trigger (Claude Code):
 /fpp We need to add webhook support to the notification system
@@ -81,6 +83,21 @@ The skill produces:
 ## 4. Gap Analysis
 ## 5. Path Comparison (A: Minimal Modification vs B: Refactor)
 ## 6. Recommendation
+```
+
+### Saving the analysis to a file
+
+After the analysis is presented, the agent will prompt you to save it as a local file. Simply say:
+
+```
+输出文档     # (Chinese — "output document")
+save         # (English)
+```
+
+The document is saved to `doc/fpp/<date>-<topic>.md` in your project directory. Example:
+
+```
+doc/fpp/20260603-authentication-module-analysis.md
 ```
 
 ## Structure

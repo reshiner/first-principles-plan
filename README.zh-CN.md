@@ -59,6 +59,8 @@ curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-plan/main
 
 ## 使用方式
 
+### 触发分析
+
 ```
 # 手动触发（Claude Code）：
 /fpp 我们需要给通知系统添加 Webhook 支持
@@ -84,6 +86,20 @@ challenge assumptions in this codebase
 ```
 
 输出文档的标题会随用户语言自动切换为中/英文。
+
+### 保存分析文档到本地文件
+
+分析输出到对话后，工具会提示你保存为本地文件。只需说：
+
+```
+输出文档     # 或 "保存文档"、"导出"、"保存"
+```
+
+文档将被保存到项目目录下的 `doc/fpp/<日期>-<主题概括>.md`。例如：
+
+```
+doc/fpp/20260603-用户认证模块分析.md
+```
 
 ## 目录结构
 

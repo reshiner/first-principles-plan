@@ -275,6 +275,129 @@ Before presenting the analysis, verify:
 
 If any check fails, go back and fix it before presenting.
 
+---
+
+## 文档持久化（Document Persistence）
+
+在完成上述三个阶段并输出结构化文档到对话后，**等待用户指令**。当用户说以下任一短语时，将最终文档写入文件：
+
+| 语言 | 触发短语 |
+|------|----------|
+| 中文 | "输出文档"、"保存文档"、"导出"、"保存" |
+| 英文 | "output document"、"save document"、"export"、"save" |
+| 任何语言 | 用户明确要求保存当前分析文档 |
+
+### 文件输出规则
+
+1. **目标目录：** 用户项目的 `doc/fpp/` 目录（相对路径，基于用户的当前工作目录）
+2. **文件名格式：** `yyyymmdd-<主题概括>.md`
+   - `yyyymmdd` 为当天的日期（如 20260603）
+   - "主题概括" 与 FPP 文档的 Feature Name / 功能名称对应，使用用户语言的简短短语
+3. **文件内容：** 完整的 FPP 分析文档，使用 Markdown 格式
+
+### 行为流程
+
+1. 分析完成后，在对话结尾提示用户："分析完成。如需保存为文档文件，请说'输出文档'。"（根据用户语言做对应翻译）
+2. 用户发出保存指令后，使用 Write 工具将文档写入 `doc/fpp/<date>-<summary>.md`
+3. 写入成功后确认："已保存到 `doc/fpp/<date>-<summary>.md`"（根据用户语言做对应翻译）
+4. 如果 `doc/fpp/` 目录不存在，应当先创建该目录
+
+### 注意事项
+
+- 仅在完成完整 FPP 分析后才执行保存，不要在分析中途保存
+- 保存逻辑不影响主流程——先完成分析输出到对话，再响应用户的保存请求
+- 始终基于用户的当前工作目录（`cwd`）生成相对路径，不使用技能的自身目录
+
+---
+
+---
+
+## Phase 4: Iterative Refinement（迭代完善）
+
+After completing the three phases and outputting the structured document, the analysis enters **iterative refinement mode**. This phase enables the user and AI to collaboratively revise the analysis until it is finalized.
+
+### Behavior Flow
+
+#### Step 1: Enter Refinement Mode
+
+After outputting the Phase 1–3 analysis document, add a prompt in the user's language:
+
+**Chinese:**
+> 分析完成（v1.0）。这是我基于第一性原理的分析初稿。
+> 
+> 你可以对任意部分提出修改意见，例如：
+> - *"第三部分的设计太理想化了，需要更务实"*
+> - *"第二部分的分析忽略了数据库迁移成本"*
+> - *"推荐结论我倾向 Path A，因为时间紧迫"*
+> - *"整体没问题，可以保存"*
+> 
+> 请审阅并提供反馈，或说"确认"接受当前版本。
+
+**English:**
+> Analysis complete (v1.0). This is the first-principles analysis draft.
+>
+> You can suggest changes to any section, for example:
+> - *"The design in Section 3 is too idealistic, needs to be more pragmatic"*
+> - *"Section 2's analysis missed database migration cost"*
+> - *"I prefer Path A for the recommendation due to time constraints"*
+> - *"Looks good overall, save it"*
+>
+> Please review and provide feedback, or say "confirm" to accept the current version.
+
+#### Step 2: Process Feedback
+
+When the user provides feedback on a specific section:
+
+1. **Locate** — Identify which section(s) the feedback affects (Intent, Current Design Critique, Assumptions, Clean-Sheet Design, Gap Analysis, Path A/B, Recommendation)
+2. **Revise** — Apply the user's feedback to the affected section(s). Be faithful to the user's input while maintaining the FPP framework (keep the structured format, don't drop sections)
+3. **Version** — Increment the version number (v1.0 → v1.1 → v1.2 → ...)
+4. **Output** — Present the **full revised document**, not just the diff. At the top, add a **"Changes in this version"** summary noting what was modified
+5. **Continue** — End with the same invitation for further feedback
+
+**Example of the version header:**
+```markdown
+# First Principles Analysis: <Feature Name> (v1.1)
+
+**Changes in v1.1:**
+- Section 3 (Clean-Sheet Design): Simplified data model per user feedback — removed the event-sourcing layer, kept direct DB writes
+- Section 6 (Recommendation): shifted from "Recommend Path B" to "Hybrid" based on timeline concerns
+```
+
+#### Step 3: Respond to Non-Feedback Messages
+
+If the user sends a **question** about the analysis (e.g., "为什么这里选择了 Path A？" / "Why did you choose Path A here?"), answer the question first, then end with the refinement prompt to stay in mode.
+
+If the user changes the **topic entirely** (e.g., "先不管这个，帮我看看另一个 bug"), exit refinement mode and handle the new topic normally.
+
+#### Step 4: Exit Conditions
+
+| Trigger | Action |
+|---------|--------|
+| User says "确认" / "确认保存" / "接受" / "同意" / "finalize" / "confirm" / "accept" | **Confirm + Save + Exit:** Mark the current version as final, write to `doc/fpp/<date>-<summary>.md` using the Document Persistence rules, confirm success, and exit refinement mode. |
+| User says "保存" / "导出" / "输出文档" / "save" / "export" | **Save + Exit:** Same as confirm — write to `doc/fpp/<date>-<summary>.md`, confirm success, and exit. (Saving implies finalization.) |
+| User says "结束" / "退出" / "done" / "exit" | **Exit without save:** Exit refinement mode. The analysis is still in conversation history. |
+| User clearly changes topic | Auto-exit refinement mode. |
+
+### Important Rules
+
+1. **Always output the full revised document** — not just the changed section. This keeps the complete analysis in context for the next iteration.
+2. **Increment version on every revision** — v1.0 → v1.1 → v1.2 → v1.3 ...
+3. **Never drop sections** during revision — every revision must include all 6+ sections (Intent, Current Design Critique, Assumptions, Clean-Sheet Design, Gap Analysis, Path Comparison, Recommendation). Even if unchanged, include them.
+4. **Stay faithful to the FPP framework** — user feedback should refine the analysis, not discard the first-principles structure (e.g., if user wants to skip Clean-Sheet Design, that's their call — note it as a constraint in the revision summary).
+5. **If user feedback contradicts FPP intent** (e.g., "just tell me what to change, skip the analysis"), note this politely and comply — user feedback takes precedence.
+6. **The conversation protocol maintains the mode** — each AI reply ends with a question about feedback or next steps, naturally guiding the user's next message into refinement mode. No external state management needed.
+
+### Self-Check for Phase 4
+
+Before transitioning out of refinement mode, verify:
+- [ ] Is every version clearly marked (v1.0, v1.1, ...)?
+- [ ] Does each revision include a "Changes in this version" summary?
+- [ ] Are all 6+ sections present in the latest revision?
+- [ ] Was the user's feedback faithfully incorporated?
+- [ ] Did the user explicitly confirm, save, or request exit before leaving refinement mode?
+
+---
+
 ## Diagnostic Patterns
 
 When analyzing code, watch for these recurring patterns. Each has a specific first-principles diagnosis:
