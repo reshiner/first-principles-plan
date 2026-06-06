@@ -13,3 +13,6 @@
 
 # Project-local tracking (not part of distributed skill)
 TODO.md
+
+# Stale output directory (use docs/fpt/ instead)
+doc/

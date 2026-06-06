@@ -24,11 +24,7 @@
 
 ### Claude Code（推荐）
 
-有两种方式：
-
-**方式 A：Marketplace 安装（最简单，Claude Code v2.24+）**
-
-在 Claude Code 中执行以下命令：
+通过 Marketplace 安装（Claude Code v2.24+）：
 
 ```
 /plugin marketplace add https://github.com/reshiner/first-principles-thinking
@@ -36,21 +32,6 @@
 ```
 
 这会注册 `reshiner` 市场源并安装插件 — Claude Code 自动发现 `/fpt` 斜杠命令和自动触发技能。
-
-**方式 B：安装脚本（所有 Claude Code 版本）**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-thinking/main/install.sh | bash
-```
-
-或手动克隆和运行：
-
-```bash
-git clone https://github.com/reshiner/first-principles-thinking.git
-./first-principles-thinking/install.sh
-```
-
-安装脚本会在 `~/.claude/plugins/cache/reshiner/first-principles-thinking/1.0.0/` 创建插件缓存结构，并注册 `/fpt` 斜杠命令。
 
 ### Codex CLI
 
@@ -68,9 +49,11 @@ curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-thinking/
 
 在 `~/.opencode/skills/first-principles-thinking/` 创建指向 `adapters/opencode/` 的符号链接。
 
-### 一键安装全部
+### 全部平台
 
 ```bash
+# Claude Code：使用 marketplace 安装（见上方说明）
+# Codex CLI + OpenCode：
 curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-thinking/main/install.sh | bash -s -- --all
 ```
 
@@ -112,18 +95,17 @@ challenge assumptions in this codebase
 输出文档     # 或 "保存文档"、"导出"、"保存"
 ```
 
-文档将被保存到项目目录下的 `doc/fpt/<日期>-<主题概括>.md`。例如：
+文档将被保存到项目目录下的 `docs/fpt/<日期>-<主题概括>.md`。例如：
 
 ```
-doc/fpt/20260603-用户认证模块分析.md
+docs/fpt/20260603-用户认证模块分析.md
 ```
 
 ## 目录结构
 
 ```
-~/.agents/skills/first-principles-thinking/     # 技能目录
+first-principles-thinking/     # 仓库根目录
 ├── SKILL.md                                 # 核心方法论（平台无关）
-├── CLAUDE.md                                # AI 代理项目指令
 ├── adapters/                                # 平台特定入口
 │   ├── README.md                            # 适配器概览
 │   ├── claude/
@@ -133,16 +115,15 @@ doc/fpt/20260603-用户认证模块分析.md
 │   │   └── fpt.agent.md
 │   └── opencode/                            # OpenCode 规则
 │       └── fpt.rule.md
-├── examples/                                # FPT 分析示例文档
-│   ├── notification-system-fpt.md           # 示例（中文）：通知系统添加 Webhook
-│   └── payment-checkout-fpt.md              # 示例（English）：支付系统添加 Buy Now
-├── doc/fpt/                                 # 保存的 FPT 分析文档
-├── commands -> adapters/claude/commands     # 向后兼容符号链接
-├── .claude-plugin -> adapters/claude/.claude-plugin
+├── docs/fpt/                                 # FPT 分析文档及示例
+│   ├── notification-system-fpt.md           # 示例：通知系统添加 Webhook
+│   └── payment-checkout-fpt.md              # 示例：支付系统添加 Buy Now
+├── commands -> adapters/claude/commands     # `/fpt` 斜杠命令（用于 marketplace 安装的根目录符号链接）
+├── .claude-plugin -> adapters/claude/.claude-plugin  # 插件清单（用于 marketplace 安装的根目录符号链接）
+├── skills -> adapters/claude/skills        # 技能内容（用于 marketplace 安装的根目录符号链接）
 ├── README.md                                # 项目介绍（英文）
 ├── README.zh-CN.md                          # 项目介绍（中文）
 ├── LICENSE                                  # MIT 许可证
-├── TODO.md                                  # 开发待办列表
 └── install.sh                               # 安装脚本
 ```
 
@@ -152,8 +133,8 @@ doc/fpt/20260603-用户认证模块分析.md
 
 | 示例 | 语言 | 场景 | 关键要点 |
 |------|------|------|----------|
-| [通知系统 — Webhook 支持](examples/notification-system-fpt.md) | 中文 | 为基于 if-elif 的通知系统添加新渠道 | 展示 FPT 如何在添加第 N+1 个分支前发现设计债务；推荐 **Hybrid 方案**（Strangler Fig 渐进重构） |
-| [支付系统 — Buy Now](examples/payment-checkout-fpt.md) | English | 为多步骤结账流程添加一键购买 | 展示 FPT **推荐最小修补**的场景——因为债务尚未积累到需要重构的程度。包含一个"重构触发器"文档 |
+| [通知系统 — Webhook 支持](docs/fpt/notification-system-fpt.md) | 中文 | 为基于 if-elif 的通知系统添加新渠道 | 展示 FPT 如何在添加第 N+1 个分支前发现设计债务；推荐 **Hybrid 方案**（Strangler Fig 渐进重构） |
+| [支付系统 — Buy Now](docs/fpt/payment-checkout-fpt.md) | English | 为多步骤结账流程添加一键购买 | 展示 FPT **推荐最小修补**的场景——因为债务尚未积累到需要重构的程度。包含一个"重构触发器"文档 |
 
 每个示例都完整遍历 FPT 输出格式的六个章节。代码片段仅为示意，非真实项目代码。
 

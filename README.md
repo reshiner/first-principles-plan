@@ -26,11 +26,7 @@ Choose your platform below.
 
 ### Claude Code (recommended)
 
-You have two options:
-
-**Option A: Marketplace install (easiest, Claude Code v2.24+)**
-
-Run these commands in Claude Code:
+Install via the marketplace (Claude Code v2.24+):
 
 ```
 /plugin marketplace add https://github.com/reshiner/first-principles-thinking
@@ -38,21 +34,6 @@ Run these commands in Claude Code:
 ```
 
 This registers the `reshiner` marketplace and installs the plugin — Claude Code discovers the `/fpt` slash command and auto-triggering skill automatically.
-
-**Option B: Install script (all Claude Code versions)**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-thinking/main/install.sh | bash
-```
-
-Or clone and run manually:
-
-```bash
-git clone https://github.com/reshiner/first-principles-thinking.git
-./first-principles-thinking/install.sh
-```
-
-The install script creates the plugin cache structure at `~/.claude/plugins/cache/reshiner/first-principles-thinking/1.0.0/` and registers the `/fpt` slash command.
 
 ### Codex CLI
 
@@ -73,6 +54,8 @@ This creates a symlink at `~/.opencode/skills/first-principles-thinking/` pointi
 ### All platforms
 
 ```bash
+# Claude Code: use marketplace install (see above)
+# Codex CLI + OpenCode:
 curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-thinking/main/install.sh | bash -s -- --all
 ```
 
@@ -113,18 +96,17 @@ After the analysis is presented, the agent will prompt you to save it as a local
 save         # (English)
 ```
 
-The document is saved to `doc/fpt/<date>-<topic>.md` in your project directory. Example:
+The document is saved to `docs/fpt/<date>-<topic>.md` in your project directory. Example:
 
 ```
-doc/fpt/20260603-authentication-module-analysis.md
+docs/fpt/20260603-authentication-module-analysis.md
 ```
 
 ## Structure
 
 ```
-~/.agents/skills/first-principles-thinking/     # Skill directory
+first-principles-thinking/     # Repository root
 ├── SKILL.md                                 # Core methodology (platform-agnostic)
-├── CLAUDE.md                                # Project instructions for AI agents
 ├── adapters/                                # Platform-specific entry points
 │   ├── README.md                            # Adapter overview
 │   ├── claude/
@@ -134,16 +116,15 @@ doc/fpt/20260603-authentication-module-analysis.md
 │   │   └── fpt.agent.md
 │   └── opencode/                            # OpenCode rules
 │       └── fpt.rule.md
-├── examples/                                # FPT analysis example documents
-│   ├── notification-system-fpt.md
-│   └── payment-checkout-fpt.md
-├── doc/fpt/                                 # Saved FPT analysis documents
+├── docs/fpt/                                 # FPT analysis documents & examples
+│   ├── notification-system-fpt.md          # Example: Webhook support analysis
+│   └── payment-checkout-fpt.md             # Example: Buy Now analysis
 ├── commands/ -> adapters/claude/commands    # `/fpt` slash command (root symlink for marketplace install)
 ├── .claude-plugin/ -> adapters/claude/.claude-plugin  # Plugin manifest (root symlink for marketplace install)
+├── skills/ -> adapters/claude/skills       # Skill content (root symlink for marketplace install)
 ├── README.md                                # This file (English)
 ├── README.zh-CN.md                          # Introduction (中文)
 ├── LICENSE                                  # MIT License
-├── TODO.md                                  # Development todo list
 └── install.sh                               # Install script
 ```
 
@@ -153,8 +134,8 @@ Real-world FPT analysis documents demonstrating the skill in action:
 
 | Example | Language | Scenario | Key Takeaway |
 |---------|----------|----------|--------------|
-| [Notification System — Webhook Support](examples/notification-system-fpt.md) | 中文 | Adding a new notification channel to an `if-elif` based sender | Shows how FPT catches design debt before adding the N+1th branch; recommends **Hybrid** (Strangler Fig for safe incremental refactor) |
-| [Payment Checkout — Buy Now](examples/payment-checkout-fpt.md) | English | Adding one-click purchase to a multi-step checkout flow | Shows when FPT **recommends the minimal patch** — because the debt hasn't compounded enough yet. Includes a documented refactoring trigger for when it should be revisited |
+| [Notification System — Webhook Support](docs/fpt/notification-system-fpt.md) | 中文 | Adding a new notification channel to an `if-elif` based sender | Shows how FPT catches design debt before adding the N+1th branch; recommends **Hybrid** (Strangler Fig for safe incremental refactor) |
+| [Payment Checkout — Buy Now](docs/fpt/payment-checkout-fpt.md) | English | Adding one-click purchase to a multi-step checkout flow | Shows when FPT **recommends the minimal patch** — because the debt hasn't compounded enough yet. Includes a documented refactoring trigger for when it should be revisited |
 
 Each example walks through all six sections of the FPT output format. They are self-contained demonstrations — the code snippets are illustrative, not from real repositories.
 

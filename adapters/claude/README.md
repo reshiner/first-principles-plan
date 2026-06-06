@@ -10,8 +10,8 @@ Claude Code 技能发现系统的入口。
 
 ## Discovery / 发现机制
 
-Claude Code discovers this skill automatically via `~/.agents/skills/` scanning.
-Claude Code 通过扫描 `~/.agents/skills/` 自动发现此技能。
+Claude Code discovers and loads this skill through the v2 plugin system — registration in `installed_plugins.json` and `settings.json` enables the `/fpt` slash command and the `first-principles-thinking` skill from the plugin's `skills/` directory.
+Claude Code 通过 v2 插件系统发现并加载此技能 — 在 `installed_plugins.json` 和 `settings.json` 中注册后，即可启用 `/fpt` 斜杠命令和插件 `skills/` 目录中的 first-principles-thinking 技能。
 
-Root-level symlinks (`commands` → `adapters/claude/commands`, `.claude-plugin` → `adapters/claude/.claude-plugin`) ensure backward compatibility for existing installations.
-根目录的符号链接（见上）确保已安装用户的向后兼容性。
+Root-level symlinks (`commands` → `adapters/claude/commands`, `.claude-plugin` → `adapters/claude/.claude-plugin`, `skills` → `adapters/claude/skills`) ensure compatibility for both marketplace install and script-based install.
+根目录的符号链接（`commands`、`.claude-plugin`、`skills`）确保 marketplace 安装和脚本安装两种方式都能正常工作。

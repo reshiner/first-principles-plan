@@ -8,10 +8,10 @@ description: "Forces first-principles thinking for code changes — critically e
 # First Principles Thinking
 
 > **OpenCode adapter** — This file provides the entry point for OpenCode (`~/.opencode/skills/first-principles-thinking/`).
-> It delegates to the canonical methodology at `~/.agents/skills/first-principles-thinking/SKILL.md`.
+> It delegates to the canonical methodology at `../../SKILL.md` (the repo root).
 > Format: `.rule.md` with YAML frontmatter (name, description).
 
-Load and follow the full instructions from `~/.agents/skills/first-principles-thinking/SKILL.md`.
+Load and follow the full instructions from `../../SKILL.md`.
 
 This adapter is installed via: `bash install.sh --opencode`
 
