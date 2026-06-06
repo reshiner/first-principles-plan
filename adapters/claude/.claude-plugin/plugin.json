@@ -1,5 +1,6 @@
 {
   "name": "first-principles-thinking",
+  "version": "1.3.0",
   "description": "First Principles Thinking — critically evaluate existing code design, design the ideal solution, then reconcile.",
   "author": {
     "name": "reshiner"
