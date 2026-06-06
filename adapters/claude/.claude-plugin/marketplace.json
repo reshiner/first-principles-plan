@@ -1,0 +1,28 @@
+{
+  "name": "reshiner",
+  "id": "reshiner",
+  "owner": {
+    "name": "reshiner"
+  },
+  "metadata": {
+    "description": "First Principles Thinking — critically evaluate existing code design, design the ideal solution, then reconcile.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "first-principles-thinking",
+      "source": "./",
+      "description": "First Principles Thinking — critically evaluate existing code design, design the ideal solution, then reconcile.",
+      "version": "1.0.0",
+      "author": {
+        "name": "reshiner"
+      },
+      "keywords": [
+        "first-principles",
+        "design",
+        "refactoring"
+      ],
+      "category": "workflow"
+    }
+  ]
+}

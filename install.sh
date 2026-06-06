@@ -73,6 +73,38 @@ cat > "$PLUGIN_CACHE_DIR/.claude-plugin/plugin.json" <<'PLUGINJSON'
 }
 PLUGINJSON
 
+# Write marketplace.json (required for non-official marketplaces)
+cat > "$PLUGIN_CACHE_DIR/.claude-plugin/marketplace.json" <<'MPJSON'
+{
+  "name": "reshiner",
+  "id": "reshiner",
+  "owner": {
+    "name": "reshiner"
+  },
+  "metadata": {
+    "description": "First Principles Thinking — critically evaluate existing code design, design the ideal solution, then reconcile.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "first-principles-thinking",
+      "source": "./",
+      "description": "First Principles Thinking — critically evaluate existing code design, design the ideal solution, then reconcile.",
+      "version": "1.0.0",
+      "author": {
+        "name": "reshiner"
+      },
+      "keywords": [
+        "first-principles",
+        "design",
+        "refactoring"
+      ],
+      "category": "workflow"
+    }
+  ]
+}
+MPJSON
+
 # Symlink SKILL.md so updates in the repo are reflected live
 ln -sfn "${INSTALL_DIR}/SKILL.md" "$PLUGIN_CACHE_DIR/skills/first-principles-thinking/SKILL.md"
 
@@ -132,6 +164,49 @@ if key not in data.get('plugins', {}):
 else
   echo "   ⚠ Cannot find ${INSTALLED_JSON}. Manual registration required:"
   echo "      Add an entry 'first-principles-thinking@reshiner' to your installed_plugins.json"
+fi
+
+# Register reshiner marketplace in settings.json (required for v2 plugin loading)
+echo "  → Registering reshiner marketplace in settings.json..."
+SETTINGS_JSON="${HOME}/.claude/settings.json"
+if [ -f "$SETTINGS_JSON" ]; then
+  python3 -c "
+import json, os
+
+path = os.path.expanduser('$SETTINGS_JSON')
+with open(path) as f:
+    data = json.load(f)
+
+changed = False
+
+# Add reshiner to extraKnownMarketplaces
+extra = data.setdefault('extraKnownMarketplaces', {})
+if 'reshiner' not in extra:
+    extra['reshiner'] = {
+        'source': {
+            'source': 'github',
+            'repo': 'reshiner/first-principles-thinking'
+        }
+    }
+    changed = True
+
+# Enable the plugin
+plugins = data.setdefault('enabledPlugins', {})
+if 'first-principles-thinking@reshiner' not in plugins:
+    plugins['first-principles-thinking@reshiner'] = True
+    changed = True
+
+if changed:
+    with open(path, 'w') as f:
+        json.dump(data, f, indent=2)
+        f.write('\n')
+    print('   • Updated settings.json')
+else:
+    print('   • Already configured in settings.json')
+  "
+else
+  echo "   ⚠ Cannot find ${SETTINGS_JSON}. Manual configuration required:"
+  echo "      Add 'reshiner' to extraKnownMarketplaces and 'first-principles-thinking@reshiner' to enabledPlugins"
 fi
 
 # ── Platform: Codex CLI ──────────────────────────────────────
