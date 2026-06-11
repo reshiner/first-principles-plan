@@ -7,17 +7,19 @@ A multi-platform AI coding skill that breaks the "minimal change" bias in LLM-as
 
 When AI agents modify existing code, they default to producing the smallest possible diff — which leads to accreted complexity, patched-over abstractions, and design debt. This skill forces a structured process:
 
-1. **Decompose** — understand the user's true intent, critically evaluate existing code for design debt
-2. **Design** — imagine the ideal solution from first principles, ignoring existing code
+1. **Decompose** — understand the user's true intent, critically evaluate existing code or source documents for design debt and hidden assumptions
+2. **Design** — imagine the ideal solution from first principles, ignoring existing code or code-bound constraints
 3. **Reconcile** — compare the minimal-change path vs. the ideal design, and make a reasoned recommendation
+4. **Refine** — collaboratively revise the analysis through iterative feedback until finalized
 
-The skill does **not** always recommend refactoring. It makes the tradeoff **explicit** so you know what you're accepting.
+The skill operates in **two modes**: **Standalone** (analyze project code) and **Review Gate** (review spec/plan/brainstorming drafts for assumption challenges). The skill does **not** always recommend refactoring. It makes the tradeoff **explicit** so you know what you're accepting.
 
 ## Features
 
+- **Two invocation modes** — **Standalone** (analyze project code) and **Review Gate** (review spec/plan/brainstorming drafts for assumption challenges)
 - **`/fpt` slash command** (Claude Code) or equivalent trigger on other platforms
-- **Automatic trigger** — activates on phrases like "第一性原理", "challenge assumptions", "从根本分析", and non-trivial code modification requests
-- **Structured output** — produces a `First Principles Analysis` document with intent, critique, clean-sheet design, path comparison, and recommendation
+- **Automatic trigger** — activates when the user asks for structural critique, says "第一性原理"/"challenge assumptions"/"从根本分析"/"这个设计合理吗", or passes a source document for review
+- **Structured output** — produces a `First Principles Analysis` document (Standalone) or `FPT Review Feedback` (Review Gate) with intent, critique, clean-sheet design, path comparison, and recommendation
 - **Decision framework** — 4 heuristics (touch frequency, provably wrong, Strangler Fig, compounding debt) to guide the recommendation
 
 ## Installation
@@ -61,13 +63,13 @@ curl -fsSL https://raw.githubusercontent.com/reshiner/first-principles-thinking/
 
 ## Usage
 
-### Triggering an analysis
+### Standalone mode — Analyzing project code
 
 ```
-# Manual trigger (Claude Code):
-/fpt We need to add webhook support to the notification system
+# Claude Code:
+/fpt Analyze the notification system design
 
-# Or trigger via natural language (any platform):
+# Natural language (any platform):
 用第一性原理分析一下这个现有的设计
 Think from first principles about adding this feature
 challenge assumptions in this codebase
@@ -87,9 +89,20 @@ The skill produces:
 ## 6. Recommendation
 ```
 
+### Review Gate mode — Reviewing a spec/plan draft
+
+Pass a source document (brainstorming output, spec, or plan) to review its assumptions and decisions:
+
+```
+审查这个方案的设计
+Review this plan from first principles
+```
+
+The skill produces structured `FPT Review Feedback` with assumption challenges, design blind spots, and section-by-section revision suggestions.
+
 ### Saving the analysis to a file
 
-After the analysis is presented, the agent will prompt you to save it as a local file. Simply say:
+After a Standalone analysis is presented, the agent will prompt you to save it as a local file. Simply say:
 
 ```
 输出文档     # (Chinese — "output document")
@@ -141,7 +154,7 @@ Each example walks through all six sections of the FPT output format. They are s
 
 ## Design Philosophy
 
-This skill addresses a specific problem in AI-assisted development: **LLMs naturally default to minimal-change paths**. Training data (most commits are small), system prompts ("surgical changes"), and risk-aversion all bias toward patching rather than fixing. The result is code quality decay through accretion.
+This skill addresses a specific problem in AI-assisted development: **LLMs naturally default to minimal-change paths**. Training data (most commits are small), system prompts ("surgical changes"), and risk-aversion all bias toward patching rather than fixing — whether the target is code or a design document. The result is quality decay through accretion.
 
 The skill doesn't override the "surgical changes" principle — it adds a decision gate: *before* you decide to make a minimal change, you must explicitly consider whether the design itself is correct. If it is, the minimal change is the right answer. If it isn't, you should know that and make a conscious tradeoff.
 
